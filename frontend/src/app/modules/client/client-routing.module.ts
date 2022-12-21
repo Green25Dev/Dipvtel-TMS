@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import { CompanyComponent } from './company/company.component';
 import { SomosUserComponent } from './somos-user/somos-user.component';
+import { RoleComponent } from './role/role.component';
 import {LayoutComponent} from "./layout/layout.component";
 
 const routes: Routes = [
@@ -30,6 +31,11 @@ const routes: Routes = [
         path: 'somos_users',
         component: SomosUserComponent,
         data: {title: 'SomosUser', guiSection: 'SomosUser'},
+      },
+      {
+        path: 'roles',
+        component: RoleComponent,
+        data: {title: 'Role', guiSection: 'Role'},
       },
     ]
   },

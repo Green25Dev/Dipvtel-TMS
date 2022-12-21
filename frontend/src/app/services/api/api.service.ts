@@ -71,7 +71,7 @@ export class ApiService {
   }
 
   createCompany(data: any): Observable<ICompany> {
-    return this.http.post<ICompany>(`${this.coreApi}//companies`, data);
+    return this.http.post<ICompany>(`${this.coreApi}/companies`, data);
   }
 
   getCompany(id: number): Observable<ICompany> {
@@ -121,10 +121,37 @@ export class ApiService {
     return this.http.delete<any>(`${this.coreApi}/somos-users/${id}`);
   }
 
-  getRolesList(active: string, direction: string, page: number, size: number, filterName: string, filterValue: string): Observable<IRole[]> {
-    const filter = getFilter(active, direction, size, page, filterValue, null, null, userKeys);
+  //Roles APIs
+  getRolesList(active: string, direction: string, page: number, size: number, filterValue: string): Observable<IRole[]> {
+    const filter = getFilter(active, direction, size, page, filterValue, null, null, [
+      'name', 
+      'description', 
+    ]);
     const url = `${this.coreApi}/roles?${filter !== 'filter=' ? filter + '&' : ''}`;
     return this.http.get<IRole[]>(url);
   }
+
+  getRoleCount(filterValue: string, customerFilter?: any): Observable<any> {
+    const whereParam = getCountWhere(filterValue, '', '', [], customerFilter);
+    return this.http.get<any>(`${this.coreApi}/roles/count?${'where=' + whereParam}`);
+  }
+
+  createRole(data: any): Observable<IRole> {
+    return this.http.post<IRole>(`${this.coreApi}/roles`, data);
+  }
+
+  getRole(id: number): Observable<IRole> {
+    const url = `${this.coreApi}/roles/${id}`;
+    return this.http.get<IRole>(url);
+  }
+
+  updateRole(data: any): Observable<IRole> {
+    return this.http.patch<IRole>(`${this.coreApi}/roles/${data.id}`, data);
+  }
+
+  deleteRoleById(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.coreApi}/roles/${id}`);
+  }
+
 
 }

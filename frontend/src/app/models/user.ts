@@ -66,13 +66,17 @@ export interface ISomosUser {
 }
 
 export interface IRole {
-  id: number;
-  name: string;
-  customerId: number;
-  created: Date;
-  description: string;
-  modified: Date;
-  Customer: ICustomer;
+  id: number,
+  name: string,
+  description: string,
+  customerId: number,
+  Customer: ICustomer,
+  created: Date,
+  modified: Date,
+  created_at: any,
+  updated_at: any,
+  created_by: any,
+  updated_by: any
 }
 
 export interface ICustomer {

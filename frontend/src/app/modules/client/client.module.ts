@@ -32,6 +32,7 @@ import {LayoutComponent} from "./layout/layout.component";
 import {AppMenuitemComponent} from "./leftmenu/menuitem.component";
 import { CompanyComponent } from './company/company.component';
 import { SomosUserComponent } from './somos-user/somos-user.component';
+import { RoleComponent } from './role/role.component';
 
 // FullCalendarModule.registerPlugins([ // register FullCalendar plugins
 //   dayGridPlugin,
@@ -81,6 +82,7 @@ import { SomosUserComponent } from './somos-user/somos-user.component';
     LayoutComponent,
     CompanyComponent,
     SomosUserComponent,
+    RoleComponent,
   ],
   providers: [],
   exports: [

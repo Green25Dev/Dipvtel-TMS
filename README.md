@@ -1,1 +1,0 @@
-This is the project with Angular and Node.js/Loopback.
