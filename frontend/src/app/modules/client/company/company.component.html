@@ -1,0 +1,221 @@
+<h4 class="page_title">Company Management</h4>
+<div class="card">
+  <div class="grid">
+    <div class="col-12 md:col-5">
+      <div class="p-inputgroup">
+        <input type="text" pInputText placeholder="Keyword..." [(ngModel)]="filterValue" [disabled]="isLoading" (keyup.enter)="onClickFilter()">
+        <button type="button" pButton pRipple label="Search" icon="pi pi-search" (click)="isLoading ? '' : onClickFilter()" [style]="isLoading ? {opacity: 0.5} : ''"></button>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-7 text-right">
+<!--      <span class="p-buttonset mt-5">-->
+				<button pButton pRipple label="Add New Company" *ngIf="permission==permissionTypeAll" (click)="openCompanyModal('Add')"></button>
+<!--			</span>-->
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <p-table [value]="companies" responsiveLayout="stack" [responsive]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="text-align-center" [ngClass]="sortActive === 'name' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('name')">Name</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'code' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('code')">Code</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'role_code' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('role_code')">Role Code</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'resp_org_id' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('resp_org_id')">Resp Org Id</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'company_email' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('company_email')">Email</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'status' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('status')">Status</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'created_at' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('created_at')">Created At</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'updated_at' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('updated_at')">Updated At</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'created_by' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('created_by')">Created By</a>
+        </th>
+        <th class="text-align-center" [ngClass]="sortActive === 'updated_by' ? 'sorting_' + sortDirection.toLowerCase() :'sorting'">
+          <a (click)="onSortChange('updated_by')">Updated By</a>
+        </th>
+        <!-- <th>Users</th> -->
+        <th class="text-align-center">Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-company>
+      <tr>
+        <td class="text-align-center">
+          <span class="p-column-title">Name</span>
+          {{ company.name }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Code</span>
+          {{ company.code }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Role Code</span>
+          {{ company.role_code }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Resp Org Id</span>
+          {{ company.resp_org_id }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Email</span>
+          {{ company.company_email }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Status</span>
+          {{ company.status }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Created At</span>
+          {{ company.created_at }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Updated At</span>
+          {{ company.updated_at }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Created By</span>
+          {{ company.created_by }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-column-title">Updated By</span>
+          {{ company.updated_by }}
+        </td>
+        <td class="text-align-center">
+          <span class="p-buttonset">
+            <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined p-button-help" (click)="viewCompany($event, company.id)"></button>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-outlined p-button-warning" (click)="onOpenEditModal($event, company.id)"></button>
+            <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-outlined p-button-danger" (click)="deleteCompany($event, company.id)"></button>
+            <!-- <button pButton type="button" icon="pi pi-eye" class="p-button-link p-button-danger"></button>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-link p-button-danger"></button>
+            <button pButton type="button" icon="pi pi-trash" class="p-button-link p-button-danger"></button> -->
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-paginator [rows]="pageSize" [totalRecords]="resultsLength" (onPageChange)="paginate($event)"></p-paginator>
+</div>
+
+<p-dialog [header]="modalTitle" [(visible)]="flag_openDialog" (onHide)="closeCompanyModal()" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '80vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+    <form #f="ngForm" (ngSubmit)="onCompanySubmit(f.value)">
+
+      <div class="grid">
+        <div class="col">
+          <p-panel header="Company Information">
+            <div class="grid">
+              <div class="col flex-column-container">
+                <span class="p-float-label">
+                  <input type="text" id="name" name="name" pInputText [(ngModel)]="input_name" required ngModel style="width: 100%;"> 
+                  <label for="name">Company name</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="role_code" name="role_code" pInputText [(ngModel)]="input_role_code" required ngModel style="width: 100%;"> 
+                  <label for="role_code">Role Code</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="email" id="company_email" name="company_email" pInputText [(ngModel)]="input_company_email" required ngModel style="width: 100%;"> 
+                  <label for="company_email">Company Email</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="city" name="city" pInputText [(ngModel)]="input_city" ngModel style="width: 100%;"> 
+                  <label for="city">City</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="zip_code" name="zip_code" pInputText [(ngModel)]="input_zip_code" ngModel style="width: 100%;"> 
+                  <label for="zip_code">Zip Code</label>
+                </span>
+              </div>
+              <div class="col flex-column-container">
+                <span class="p-float-label">
+                  <input type="text" id="code" name="code" pInputText [(ngModel)]="input_code" required ngModel style="width: 100%;"> 
+                  <label for="code">Company Code</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="resp_org_id" name="resp_org_id" pInputText [(ngModel)]="input_resp_org_id" required ngModel style="width: 100%;"> 
+                  <label for="resp_org_id">Resp Org ID</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="address" name="address" pInputText [(ngModel)]="input_address" ngModel style="width: 100%;"> 
+                  <label for="address">Address</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="state" name="state" pInputText [(ngModel)]="input_state" ngModel style="width: 100%;"> 
+                  <label for="state">State</label>
+                </span>
+              </div>
+            </div>
+          </p-panel>
+        </div>
+        <div class="col">
+          <p-panel header="Primary Contact">
+            <div class="grid">
+              <div class="col flex-column-container">
+                <span class="p-float-label">
+                  <input type="text" id="first_name" name="first_name" pInputText [(ngModel)]="input_first_name" required ngModel style="width: 100%;"> 
+                  <label for="first_name">First name</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="email" id="contact_email" name="contact_email" pInputText [(ngModel)]="input_contact_email" ngModel style="width: 100%;"> 
+                  <label for="contact_email">Email</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="ro_id" name="ro_id" pInputText [(ngModel)]="input_ro_id" required ngModel style="width: 100%;"> 
+                  <label for="ro_id">RO ID</label>
+                </span>
+              </div>
+              <div class="col flex-column-container">
+                <span class="p-float-label">
+                  <input type="text" id="last_name" name="last_name" pInputText [(ngModel)]="input_last_name" required ngModel style="width: 100%;"> 
+                  <label for="last_name">Last Name</label>
+                </span>
+
+                <span class="p-float-label">
+                  <input type="text" id="contact_phone" name="contact_phone" pInputText [(ngModel)]="input_contact_phone" ngModel style="width: 100%;"> 
+                  <label for="contact_phone">Contact Phone</label>
+                </span>
+              </div>
+            </div>
+          </p-panel>
+        </div>
+      </div>
+
+      <div *ngIf="modalTitle.toLowerCase()=='add'" class="flex justify-content-end mt-5">
+        <span class="p-buttonset">
+          <button pButton pRipple (click)="clearInputs()" label="Reset" icon="pi pi-undo" class="p-button-text p-button-danger"></button>
+          <button pButton pRipple type="submit" label="Add" icon="pi pi-check" class="p-button-text"></button>
+        </span>
+      </div>
+    </form>
+    <div *ngIf="modalTitle.toLowerCase()=='edit'" class="flex justify-content-end mt-5">
+      <span class="p-buttonset">
+        <button pButton pRipple (click)="editCompany()" label="Edit" icon="pi pi-pencil" class="p-button-text p-button-warning"></button>
+        <button pButton pRipple (click)="closeCompanyModal()" label="Cancel" icon="pi pi-times" class="p-button-text p-button-danger"></button>
+      </span>
+    </div>
+</p-dialog>
